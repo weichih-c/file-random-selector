@@ -9,7 +9,7 @@ import java.util.LinkedList;
  *
  */
 public class FileTraversal {
-	LinkedList<File> fileList = new LinkedList<>();
+	private LinkedList<File> fileList = new LinkedList<>();
 
 	/**
 	 * listing all files in the folder parameter.

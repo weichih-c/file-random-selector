@@ -19,7 +19,7 @@ public class FilePickup {
 	 * @param destinationPath
 	 * @param selectNum
 	 */
-	public void randomSelectFile(LinkedList<File> fileList, String destinationPath, int selectNum){
+	public void randomSelectFile(LinkedList<File> fileList, File destinationPath, int selectNum){
 		
 		// randomly select some number to become the index of fileList
 		FileController fctrl = new FileController();
@@ -30,7 +30,8 @@ public class FilePickup {
 		// the index of fileList is randomly get
 		for(int index : selectedIndex){
 			File tempFile = fileList.get(index);
-			fctrl.copyFile(tempFile.getAbsolutePath(), destinationPath);
+			String dirPath = destinationPath.getPath();
+			fctrl.copyFile(tempFile.getAbsolutePath(), dirPath);
 		}
 	}
 	

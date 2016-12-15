@@ -6,14 +6,18 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+
+import com.sun.xml.internal.fastinfoset.stax.events.Util;
 
 /**
  * @author weichih.c
@@ -154,8 +158,44 @@ public class UIContainer extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if( Util.isEmptyString( selectNumber.getText().trim() )){
+				JOptionPane.showMessageDialog(null, "請輸入要選擇的檔案數量");
+				return;
+			}
 			
+			if( Util.isEmptyString( sourceLocation.getText().trim() )){
+				JOptionPane.showMessageDialog(null, "請輸入檔案來源");
+				return;
+			}
 			
+			if( Util.isEmptyString( destinationLocation.getText().trim() )){
+				JOptionPane.showMessageDialog(null, "請輸入存放位置");
+				return;
+			}
+			
+			FileTraversal fTraversal = new FileTraversal();	// new fTraversal to retrieve source dir
+			FilePickup fPickup = new FilePickup();	// new fPickup to select files
+			
+			String srcPath = sourceLocation.getText();
+			
+			File sourceDir = new File(srcPath);
+			if(!sourceDir.exists() || !sourceDir.isDirectory()){
+				JOptionPane.showMessageDialog(null, "檔案來源無法讀取，請再次確認");
+				return;
+			}
+			
+			String destPath = destinationLocation.getText();
+			File destinationPath = new File(destPath);
+			if(!destinationPath.isDirectory()){
+				destinationPath.mkdirs();
+			}
+			
+			int num = Integer.parseInt( selectNumber.getText().trim() );
+			
+			LinkedList<File> fileList = fTraversal.listFilesForFolder(sourceDir);
+			fPickup.randomSelectFile(fileList, destinationPath, num);
+			
+			JOptionPane.showMessageDialog(null, "已複製完成!");
 		}
 		
 	}
