@@ -14,8 +14,9 @@ public class FilePickup {
 	
 	/**
 	 * selecting some files, the amount of files is according the 'selectNum'.
+	 * After selecting, files will be saved in destination path.
 	 * 
-	 * @param fileList
+	 * @param fileList Whole fileList in source directory
 	 * @param destinationPath
 	 * @param selectNum
 	 */

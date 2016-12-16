@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -110,6 +112,7 @@ public class UIContainer extends JPanel {
 				selectNumber.setText("");
 				sourceLocation.setText("");
 				destinationLocation.setText("");
+				zipFileName.setText("");
 			}
 		});
 		
@@ -256,7 +259,37 @@ public class UIContainer extends JPanel {
 			int num = Integer.parseInt( selectNumber.getText().trim() );
 			
 			LinkedList<File> fileList = fTraversal.listFilesForFolder(sourceDir);
-			fPickup.randomSelectFile(fileList, destinationPath, num);
+			
+			if(compressCheck.isSelected()){
+				ZipUtil zipUtil = new ZipUtil();	// initial zipUtil
+				String zipName = zipFileName.getText().trim();	// get ZipName
+				if(Util.isEmptyString(zipName))
+					zipName = "package.zip";
+				else
+					zipName = zipName + ".zip";
+				
+				String fileName = destinationPath.getPath() + File.separator + zipName;	// file save path
+				File targetZip = new File(fileName);
+				try {
+					File tempDir = new File("temp");	// make a temp dir
+					tempDir.mkdir();
+					
+					fPickup.randomSelectFile(fileList, tempDir, num);	// randomly selecting files and put to tempDir
+					zipUtil.makeZip(tempDir, targetZip);	// make a zip according tempDir
+					FileController fc = new FileController();	
+					fc.removeFile(tempDir);	// deleting temp dir
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}else{
+				fPickup.randomSelectFile(fileList, destinationPath, num);
+				
+			}
 			
 			JOptionPane.showMessageDialog(null, "已複製完成!");
 		}

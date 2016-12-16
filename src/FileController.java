@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
 
 public class FileController {
 	
@@ -60,13 +61,23 @@ public class FileController {
 		return true;
 	}
 	
+	
 	/**
 	 * 刪除檔案
-	 * @param filePath
+	 * @param target 要刪除的檔案或資料夾
 	 */
-	public void removeFile(String filePath){
-		File target = new File(filePath);
-		target.delete();
+	public void removeFile(File target){	
+		// 如果是資料夾，先把資料夾內容刪光再刪除資料夾本身
+		if(target.isDirectory()){
+			FileTraversal ft = new FileTraversal();
+			LinkedList<File> list = ft.listFilesForFolder(target);
+			for(File f : list){
+				removeFile(f);
+			}
+		}
+		
+		target.delete();	// 刪除資料夾或檔案
+
 	}
 
 
