@@ -5,10 +5,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 
 import com.sun.xml.internal.fastinfoset.stax.events.Util;
 
@@ -26,21 +30,25 @@ import com.sun.xml.internal.fastinfoset.stax.events.Util;
  *
  */
 public class UIContainer extends JPanel {
-	JLabel label1, label2, label3;
+	JLabel label1, label2, label3, label4, label5;
 	JTextField sourceLocation;
 	JTextField destinationLocation;
 	JTextField selectNumber;
 	JButton browseDir, browseDir2;
 	JButton submit;
 	JButton cancel;
-	JPanel panelTop, panelCenter, panelCenter2, panelBottom;
+	JPanel panelTop, panelCenter, panelCenter2, panelCenter3, panelBottom;
+	JCheckBox compressCheck;
+	JTextField zipFileName;
+	JPanel namePanel, buttonPanel;
 	
 	public UIContainer(){
-		setLayout(new GridLayout(4,1,0,10));
+		setLayout(new GridLayout(5,1,0,10));
 		initComponents();
 		add(panelTop);
 		add(panelCenter);
 		add(panelCenter2);
+		add(panelCenter3);
 		add(panelBottom);
 		
 		panelTop.add(label1);
@@ -54,8 +62,10 @@ public class UIContainer extends JPanel {
 		panelCenter2.add(destinationLocation);
 		panelCenter2.add(browseDir2);
 		
-		panelBottom.add(submit);
-		panelBottom.add(cancel);
+		panelCenter3.add(compressCheck);
+		panelCenter3.add(namePanel);
+		
+		panelBottom.add(buttonPanel);
 		
 		browseDir.addActionListener(new ActionListener(){
 
@@ -104,6 +114,23 @@ public class UIContainer extends JPanel {
 		});
 		
 		submit.addActionListener(new SubmitClickListener());	// submit button add listener
+		
+		compressCheck.addItemListener(new ItemListener(){
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.DESELECTED){
+					zipFileName.setEditable(false);
+					zipFileName.setBackground(new Color(191,191,191));
+				}
+				else if(e.getStateChange() == ItemEvent.SELECTED){
+					zipFileName.setEditable(true);
+					zipFileName.setBackground(Color.WHITE);
+				}
+			}
+			
+		});
+		
 	}
 	
 	private void initComponents(){
@@ -143,14 +170,44 @@ public class UIContainer extends JPanel {
 		destinationLocation = new JTextField();
 		destinationLocation.setColumns(18);
 		
+		compressCheck = new JCheckBox("是否壓縮打包檔案");
+		compressCheck.setFont(new Font("Serif", Font.PLAIN, 16));
+	
+		label4 = new JLabel("壓縮檔名：");
+		label4.setMinimumSize(new Dimension(80, 30));
+		label4.setPreferredSize(new Dimension(80, 30));
+		label4.setMaximumSize(new Dimension(80, 30));
+		label4.setFont(new Font("Serif", Font.PLAIN, 16));
+		
+		zipFileName = new JTextField();
+		zipFileName.setColumns(13);
+		zipFileName.setEditable(false);
+		zipFileName.setBackground(new Color(191,191,191));
+		
+		label5 = new JLabel(".zip");
+		
 		panelTop = new JPanel();
 		panelTop.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panelCenter = new JPanel();
 		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panelCenter2 = new JPanel();
 		panelCenter2.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelCenter3 = new JPanel();
+		panelCenter3.setLayout(new GridLayout(1, 2));
 		panelBottom = new JPanel();
 		panelBottom.setLayout(new FlowLayout(FlowLayout.CENTER));
+		namePanel = new JPanel();
+		namePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		namePanel.add(label4);
+		namePanel.add(zipFileName);
+		namePanel.add(label5);
+		
+		buttonPanel.add(submit);
+		buttonPanel.add(cancel);
 	}
 	
 	
