@@ -161,6 +161,12 @@ public class UIContainer extends JPanel {
 			if( Util.isEmptyString( selectNumber.getText().trim() )){
 				JOptionPane.showMessageDialog(null, "請輸入要選擇的檔案數量");
 				return;
+			}else if( !IntegerCheck.isInteger( selectNumber.getText().trim() ) ){
+				JOptionPane.showMessageDialog(null, "選擇的數量欄位請輸入數字");
+				return;
+			}else if( Integer.parseInt( selectNumber.getText().trim()) <= 0 ){
+				JOptionPane.showMessageDialog(null, "數量欄位請輸入正整數");
+				return;
 			}
 			
 			if( Util.isEmptyString( sourceLocation.getText().trim() )){
@@ -199,6 +205,9 @@ public class UIContainer extends JPanel {
 		}
 		
 	}
+	
+	
+	
 	
 	public static void main(String args[]) {
 		JFrame demoFrame = new JFrame();
